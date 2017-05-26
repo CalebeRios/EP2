@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.util.ArrayList;
 
 public class Map extends JPanel implements ActionListener {
 
@@ -22,6 +23,9 @@ public class Map extends JPanel implements ActionListener {
     
     private final Image background;
     private final Spaceship spaceship;
+    private Missile missile;
+    
+    private boolean shooting = false;
 
     public Map() {
         
@@ -34,7 +38,7 @@ public class Map extends JPanel implements ActionListener {
         this.background = image.getImage();
 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
-
+        
         timer_map = new Timer(Game.getDelay(), this);
         timer_map.start();
                             
@@ -46,26 +50,45 @@ public class Map extends JPanel implements ActionListener {
         
         g.drawImage(this.background, 0, 0, null);
        
-        draw(g);
+        drawSpaceship(g);
+        if(shooting){
+            drawMissile(g);
+        }
 
         Toolkit.getDefaultToolkit().sync();
     }
 
-    private void draw(Graphics g) {
+    private void drawSpaceship(Graphics g) {
                
         // Draw spaceship
         g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(), this);
+    }
+    
+    private void drawMissile(Graphics g){
+        
+        // Draw missile
+       // if(!missil.isEmpty()){
+            //for(Missile missile : missil){
+                g.drawImage(missile.getImage(), missile.getX(), missile.getY(), this);
+            //}            
+        //}
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
        
         updateSpaceship();
-       
+        //if(shooting){
+        if(shooting){
+            updateMissile();           
+        }
+            
+        //}
+        
         repaint();
     }
     
-    private void dranMissionAccomplished(Graphics g) {
+    private void drawMissionAccomplished(Graphics g) {
 
         String message = "MISSION ACCOMPLISHED";
         Font font = new Font("Helvetica", Font.BOLD, 14);
@@ -90,13 +113,33 @@ public class Map extends JPanel implements ActionListener {
     private void updateSpaceship() {
         spaceship.move();
     }
+    
+    private void updateMissile(){
+        missile.move();
+         //for(Missile missile : missil){
+         //   if(!missile.move()){
+         //       missil.remove(missile);
+         //  }
+         //}
+    }
   
 
     private class KeyListerner extends KeyAdapter {
         
         @Override
         public void keyPressed(KeyEvent e) {
-            spaceship.keyPressed(e);
+            int key = e.getKeyCode();
+            
+            if(key == KeyEvent.VK_SPACE){
+                missile = new Missile(spaceship.getX(), spaceship.getY(), 1);
+                
+                //missil.add(missile);
+                
+                shooting = true;
+            }
+            else{
+                spaceship.keyPressed(e); 
+            }
         }
 
         @Override

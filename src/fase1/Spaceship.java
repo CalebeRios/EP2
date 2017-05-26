@@ -1,6 +1,7 @@
 package fase1;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class Spaceship extends Sprite {
     
@@ -9,6 +10,8 @@ public class Spaceship extends Sprite {
    
     private int speed_x;
     private int speed_y;
+    
+   // public static ArrayList<Missile> missil;
 
     public Spaceship(int x, int y) {
         super(x, y);
@@ -74,7 +77,6 @@ public class Spaceship extends Sprite {
         if (key == KeyEvent.VK_DOWN) {
             speed_y = MAX_SPEED_Y;
         }
-        
     }
     
     public void keyReleased(KeyEvent e) {
