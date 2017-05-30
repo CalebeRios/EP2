@@ -26,11 +26,11 @@ public class Spaceship extends Sprite {
     }
     
     private void noThrust(){
-        loadImage("/home/caleberios/Documentos/EP2_base/images/spaceship.png");
+        loadImage("/home/caleberios/Documentos/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/spaceship.png");
     }
     
     private void thrust(){
-        loadImage("/home/caleberios/Documentos/EP2_base/images/spaceship_thrust.png");
+        loadImage("/home/caleberios/Documentos/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/spaceship_thrust.png");
     }    
 
     public void move() {

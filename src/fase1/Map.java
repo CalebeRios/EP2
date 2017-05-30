@@ -20,23 +20,27 @@ public class Map extends JPanel implements ActionListener {
     private final int SPACESHIP_X = 220;
     private final int SPACESHIP_Y = 430;
     private final Timer timer_map;
+    private int count = 1;
     
     private final Image background;
     private final Spaceship spaceship;
-    private Missile missile;
+    private final ArrayList<Missile> missil;
+    private final ArrayList<Enemie> enemies;
+    //private final Enemie enemie;
     
-    private boolean shooting = false;
-
     public Map() {
         
         addKeyListener(new KeyListerner());
         
         setFocusable(true);
         setDoubleBuffered(true);
-        ImageIcon image = new ImageIcon("/home/caleberios/Documentos/EP2_base/images/space.jpg");
+        ImageIcon image = new ImageIcon("/home/caleberios/Documentos/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/space.jpg");
         
         this.background = image.getImage();
-
+        
+        missil = new ArrayList();
+        enemies = Enemie.insert(5, 50, 100);
+//        enemie = new Enemie(250, 150); 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
         
         timer_map = new Timer(Game.getDelay(), this);
@@ -49,12 +53,11 @@ public class Map extends JPanel implements ActionListener {
         super.paintComponent(g);
         
         g.drawImage(this.background, 0, 0, null);
-       
         drawSpaceship(g);
-        if(shooting){
+        drawEnemie(g);
+        if(!missil.isEmpty())
             drawMissile(g);
-        }
-
+        
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -66,24 +69,27 @@ public class Map extends JPanel implements ActionListener {
     
     private void drawMissile(Graphics g){
         
-        // Draw missile
-       // if(!missil.isEmpty()){
-            //for(Missile missile : missil){
-                g.drawImage(missile.getImage(), missile.getX(), missile.getY(), this);
-            //}            
-        //}
+        // Draw missiles
+        for(Missile missile : missil){
+            g.drawImage(missile.getImage(), missile.getX(), missile.getY(), this);            
+        }
+    }
+    
+    private void drawEnemie(Graphics g){
+    
+        // Draw enemies
+        for(Enemie enemie : enemies){
+            g.drawImage(enemie.getImage(), enemie.getX(), enemie.getY(), this);            
+        }
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
        
         updateSpaceship();
-        //if(shooting){
-        if(shooting){
-            updateMissile();           
-        }
-            
-        //}
+        updateEnemie();
+        if(!missil.isEmpty())
+            updateMissile();
         
         repaint();
     }
@@ -115,14 +121,22 @@ public class Map extends JPanel implements ActionListener {
     }
     
     private void updateMissile(){
-        missile.move();
-         //for(Missile missile : missil){
-         //   if(!missile.move()){
-         //       missil.remove(missile);
-         //  }
-         //}
+        
+        for(Missile missile : missil){
+            if(missile.move()){}
+            else
+                missil.remove(missile);
+        }
     }
-  
+    
+    private void updateEnemie(){
+        int i = 0;
+        int x = 0;
+        
+        for(Enemie enemie : enemies){
+            if(enemie.move()){}
+        }
+    }
 
     private class KeyListerner extends KeyAdapter {
         
@@ -131,11 +145,7 @@ public class Map extends JPanel implements ActionListener {
             int key = e.getKeyCode();
             
             if(key == KeyEvent.VK_SPACE){
-                missile = new Missile(spaceship.getX(), spaceship.getY(), 1);
-                
-                //missil.add(missile);
-                
-                shooting = true;
+                missil.add(new Missile(spaceship.getX(), spaceship.getY(), 1));
             }
             else{
                 spaceship.keyPressed(e); 

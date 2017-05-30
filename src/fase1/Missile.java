@@ -28,14 +28,14 @@ public class Missile extends Sprite{
     }
     
     private void missile(){
-        loadImage("/home/caleberios/Documentos/EP2_base/images/missile.png");
+        loadImage("/home/caleberios/Documentos/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/missile.png");
     }
             
             
     private void explosionMissile(){
-        loadImage("/home/caleberios/Documentos/EP2_base/images/explosion.png");        
+        loadImage("/home/caleberios/Documentos/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/explosion.png");        
     }
-    
+      
     public boolean move(){
         if(y + this.width >= Game.getWidth()){
            // y += speed_y;
@@ -46,5 +46,4 @@ public class Missile extends Sprite{
         
         return true;
     }
-
 }
