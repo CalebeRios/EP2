@@ -60,6 +60,6 @@ public class Enemie extends Sprite{
         Random randX = new Random();    
         Random randY = new Random();
         
-        return new Enemie(randX.nextInt(490) + 5, -100);
+        return new Enemie(randX.nextInt(480) + 10, -100);
     }
 }

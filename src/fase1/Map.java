@@ -23,12 +23,14 @@ public class Map extends JPanel implements ActionListener {
     private int count = 1;
     private int countE = 1;
     private int countB = 1;
+    private int countL = 1;
     
     private final Image background;
     private final Spaceship spaceship;
     private final ArrayList<Missile> missil;
     private final ArrayList<Enemie> enemies;
     private Bonus bonus;
+    private Life life;
     
     public Map() {
         
@@ -44,6 +46,7 @@ public class Map extends JPanel implements ActionListener {
         enemies = new ArrayList(); 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
         bonus = Bonus.insert();
+        life = Life.insert();
         
         timer_map = new Timer(Game.getDelay(), this);
         timer_map.start();
@@ -60,6 +63,7 @@ public class Map extends JPanel implements ActionListener {
         if(!missil.isEmpty())
             drawMissile(g);
         drawBonus(g);
+        drawLife(g);
         
         Toolkit.getDefaultToolkit().sync();
     }
@@ -90,6 +94,10 @@ public class Map extends JPanel implements ActionListener {
         g.drawImage(bonus.getImage(), bonus.getX(), bonus.getY(), this);
     }
     
+    private void drawLife(Graphics g){
+        g.drawImage(life.getImage(), life.getX(), life.getY(), this);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         
@@ -98,6 +106,7 @@ public class Map extends JPanel implements ActionListener {
         if(!missil.isEmpty())
             updateMissile();
         updateBonus();
+        updateLife();
 
         repaint();
     }
@@ -163,6 +172,15 @@ public class Map extends JPanel implements ActionListener {
         }
         
         countB++;
+    }
+    
+    private void updateLife(){
+        if(life.move()){}
+        else if(life.move() == false && (countL % 500) == 0){
+            life = Life.insert();
+        }
+        
+        countL++;
     }
     
     private class KeyListerner extends KeyAdapter {
