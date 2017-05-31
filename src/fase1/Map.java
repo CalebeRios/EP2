@@ -34,12 +34,12 @@ public class Map extends JPanel implements ActionListener {
         
         setFocusable(true);
         setDoubleBuffered(true);
-        ImageIcon image = new ImageIcon("/home/caleberios/Documentos/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/space.jpg");
+        ImageIcon image = new ImageIcon("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/space.jpg");
         
         this.background = image.getImage();
         
         missil = new ArrayList();
-        enemies = Enemie.insert(5, 50, 100);
+        enemies = new ArrayList();
 //        enemie = new Enemie(250, 150); 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
         
@@ -131,11 +131,16 @@ public class Map extends JPanel implements ActionListener {
     
     private void updateEnemie(){
         int i = 0;
-        int x = 0;
+        Enemie ene = Enemie.insert();
         
         for(Enemie enemie : enemies){
             if(enemie.move()){}
         }
+        
+        if((count % 20) == 0)
+            enemies.add(ene);
+        
+        count++;
     }
 
     private class KeyListerner extends KeyAdapter {

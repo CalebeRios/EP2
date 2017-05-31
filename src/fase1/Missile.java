@@ -28,12 +28,12 @@ public class Missile extends Sprite{
     }
     
     private void missile(){
-        loadImage("/home/caleberios/Documentos/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/missile.png");
+        loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/missile.png");
     }
             
             
     private void explosionMissile(){
-        loadImage("/home/caleberios/Documentos/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/explosion.png");        
+        loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/explosion.png");        
     }
       
     public boolean move(){
