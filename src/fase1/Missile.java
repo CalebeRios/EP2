@@ -38,7 +38,7 @@ public class Missile extends Sprite{
       
     public boolean move(){
         if(y + this.width >= Game.getWidth()){
-           // y += speed_y;
+            y = 0;
             return false;
         }
                     

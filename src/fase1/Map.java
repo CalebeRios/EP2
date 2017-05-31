@@ -21,12 +21,14 @@ public class Map extends JPanel implements ActionListener {
     private final int SPACESHIP_Y = 430;
     private final Timer timer_map;
     private int count = 1;
+    private int countE = 1;
+    private int countB = 1;
     
     private final Image background;
     private final Spaceship spaceship;
     private final ArrayList<Missile> missil;
     private final ArrayList<Enemie> enemies;
-    //private final Enemie enemie;
+    private Bonus bonus;
     
     public Map() {
         
@@ -39,9 +41,9 @@ public class Map extends JPanel implements ActionListener {
         this.background = image.getImage();
         
         missil = new ArrayList();
-        enemies = new ArrayList();
-//        enemie = new Enemie(250, 150); 
+        enemies = new ArrayList(); 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
+        bonus = Bonus.insert();
         
         timer_map = new Timer(Game.getDelay(), this);
         timer_map.start();
@@ -57,6 +59,7 @@ public class Map extends JPanel implements ActionListener {
         drawEnemie(g);
         if(!missil.isEmpty())
             drawMissile(g);
+        drawBonus(g);
         
         Toolkit.getDefaultToolkit().sync();
     }
@@ -83,14 +86,19 @@ public class Map extends JPanel implements ActionListener {
         }
     }
     
+    private void drawBonus(Graphics g){
+        g.drawImage(bonus.getImage(), bonus.getX(), bonus.getY(), this);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-       
+        
         updateSpaceship();
         updateEnemie();
         if(!missil.isEmpty())
             updateMissile();
-        
+        updateBonus();
+
         repaint();
     }
     
@@ -123,6 +131,7 @@ public class Map extends JPanel implements ActionListener {
     private void updateMissile(){
         
         for(Missile missile : missil){
+            
             if(missile.move()){}
             else
                 missil.remove(missile);
@@ -132,17 +141,30 @@ public class Map extends JPanel implements ActionListener {
     private void updateEnemie(){
         int i = 0;
         Enemie ene = Enemie.insert();
+
         
-        for(Enemie enemie : enemies){
-            if(enemie.move()){}
-        }
-        
+//      if((countE) % 10 == 0){
+            for(Enemie enemie : enemies){
+                if(enemie.move()){}
+            }
+//      }
+
         if((count % 20) == 0)
             enemies.add(ene);
         
+        countE++;
         count++;
     }
 
+    private void updateBonus(){
+        if(bonus.move()){}
+        else if(bonus.move() == false && (countB % 200) == 0){
+            bonus = Bonus.insert();
+        }
+        
+        countB++;
+    }
+    
     private class KeyListerner extends KeyAdapter {
         
         @Override
@@ -150,7 +172,7 @@ public class Map extends JPanel implements ActionListener {
             int key = e.getKeyCode();
             
             if(key == KeyEvent.VK_SPACE){
-                missil.add(new Missile(spaceship.getX(), spaceship.getY(), 1));
+                missil.add(new Missile(spaceship.getX()+5, spaceship.getY(), 1));
             }
             else{
                 spaceship.keyPressed(e); 
