@@ -8,9 +8,8 @@ import javax.swing.JFrame;
 public class Application extends JFrame {
         
     public Application() {
-        getContentPane().add(new Menu(), BorderLayout.CENTER);
-        pack();
-    //    add(new Map());
+//        getContentPane().add(new Menu(), BorderLayout.CENTER);
+        add(new Map());
 
         setSize(Game.getWidth(), Game.getHeight());
 
@@ -24,7 +23,7 @@ public class Application extends JFrame {
         
         EventQueue.invokeLater(new Runnable() {
             @Override
-            public void run() {
+            public void run() { 
                 Application app = new Application();
                 app.setVisible(true);
             }

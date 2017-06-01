@@ -5,7 +5,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public abstract class Sprite {
-
+    
     protected int x;
     protected int y;
     protected int width;

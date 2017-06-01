@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Map extends JPanel implements ActionListener {
 
@@ -28,7 +29,7 @@ public class Map extends JPanel implements ActionListener {
     private final Player player;
     private final Image background;
     private final Spaceship spaceship;
-    private final ArrayList<Missile> missil;
+    private final ArrayList<Missile> missiles;
     private final ArrayList<Enemie> enemies;
     private Bonus bonus;
     private Life life;
@@ -44,7 +45,7 @@ public class Map extends JPanel implements ActionListener {
         this.background = image.getImage();
         
         player = new Player();
-        missil = new ArrayList();
+        missiles = new ArrayList();
         enemies = new ArrayList(); 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
         bonus = Bonus.insert();
@@ -62,10 +63,12 @@ public class Map extends JPanel implements ActionListener {
         g.drawImage(this.background, 0, 0, null);
         drawSpaceship(g);
         drawEnemie(g);
-        if(!missil.isEmpty())
+        if(!missiles.isEmpty())
             drawMissile(g);
-        drawBonus(g);
-        drawLife(g);
+        if(bonus.isVisible())
+            drawBonus(g);
+        if(life.isVisible())
+            drawLife(g);
         drawLifeMessage(g);
         drawBonusMessage(g);
         drawName(g);
@@ -82,7 +85,7 @@ public class Map extends JPanel implements ActionListener {
     private void drawMissile(Graphics g){
         
         // Draw missiles
-        for(Missile missile : missil){
+        for(Missile missile : missiles){
             g.drawImage(missile.getImage(), missile.getX(), missile.getY(), this);            
         }
     }
@@ -108,11 +111,13 @@ public class Map extends JPanel implements ActionListener {
         
         updateSpaceship();
         updateEnemie();
-        if(!missil.isEmpty())
+        if(!missiles.isEmpty())
             updateMissile();
         updateBonus();
         updateLife();
-
+        Collision();
+        updatePlayer();
+        
         repaint();
     }
     
@@ -182,31 +187,97 @@ public class Map extends JPanel implements ActionListener {
         spaceship.move();
     }
     
+    private void updatePlayer(){
+        if(player.getLife() == 0)
+            player.Lost(true);
+    }
+    
     private void updateMissile(){
         
-        for(Missile missile : missil){
+        for(Iterator<Missile> missil = missiles.iterator(); missil.hasNext();){
+            Missile next = missil.next();
             
-            if(missile.move()){}
-            else
-                missil.remove(missile);
+            if(next.move()){}
+            else{
+                missil.remove();
+            }
+        }
+    }
+    
+    private void Collision(){
+        if((spaceship.getX() > life.getX() && spaceship.getX() <= (life.getX() + life.getWidth()) 
+                || ((spaceship.getX() + spaceship.getWidth()) >= life.getX() 
+                && (spaceship.getX() + spaceship.getWidth()) <= life.getX() + life.getWidth()))){
+            if((spaceship.getY() > life.getY() && spaceship.getY() <= (life.getY() + life.getHeight()) 
+                    || ((spaceship.getY() + spaceship.getHeight()) >= life.getY() 
+                    && (spaceship.getY() + spaceship.getHeight()) <= life.getY() + life.getHeight()))){
+                player.gainLife();
+                life.setVisible(false);
+            }
+        }
+        
+        if((spaceship.getX() > bonus.getX() && spaceship.getX() <= (bonus.getX() + bonus.getWidth()) 
+                || ((spaceship.getX() + spaceship.getWidth()) >= bonus.getX() 
+                && (spaceship.getX() + spaceship.getWidth()) <= bonus.getX() + bonus.getWidth()))){
+            if((spaceship.getY() > bonus.getY() && spaceship.getY() <= (bonus.getY() + bonus.getHeight()) 
+                    || ((spaceship.getY() + spaceship.getHeight()) >= bonus.getY() 
+                    && (spaceship.getY() + spaceship.getHeight()) <= bonus.getY() + bonus.getHeight()))){
+                player.gainScore(10);
+                bonus.setVisible(Boolean.FALSE);
+            }
+        }
+        
+        for(Iterator<Enemie> enemie = enemies.iterator(); enemie.hasNext();){
+            Enemie next = enemie.next();
+
+            if((spaceship.getX() > next.getX() && spaceship.getX() <= (next.getX() + next.getWidth()) 
+                    || ((spaceship.getX() + spaceship.getWidth()) >= next.getX() 
+                    && (spaceship.getX() + spaceship.getWidth()) <= next.getX() + next.getWidth()))){
+                if((spaceship.getY() > next.getY() && spaceship.getY() <= (next.getY() + next.getHeight()) 
+                        || ((spaceship.getY() + spaceship.getHeight()) >= next.getY() 
+                        && (spaceship.getY() + spaceship.getHeight()) <= next.getY() + next.getHeight()))){
+                    enemie.remove();
+                    player.lossLife();
+                }
+            }
+        }
+        
+        for(Iterator<Missile> missil = missiles.iterator(); missil.hasNext();){
+            Missile next = missil.next();
+            
+            for(Iterator<Enemie> enemie = enemies.iterator(); enemie.hasNext();){
+                Enemie nexte = enemie.next();
+                if((next.getX() > nexte.getX() && next.getX() <= (nexte.getX() + nexte.getWidth()) 
+                        || ((next.getX() + next.getWidth()) >= nexte.getX() 
+                        && (next.getX() + next.getWidth()) <= nexte.getX() + nexte.getWidth()))){
+                    if((next.getY() > nexte.getY() && next.getY() <= (nexte.getY() + nexte.getHeight()) 
+                            || ((next.getY() + next.getHeight()) >= nexte.getY() 
+                            && (next.getY() + next.getHeight()) <= nexte.getY() + nexte.getHeight()))){
+                        missil.remove();
+                        enemie.remove();
+                        spaceship.missil.explosion();
+                        player.gainScore(50);
+                    }
+                }
+            }
         }
     }
     
     private void updateEnemie(){
-        int i = 0;
         Enemie ene = Enemie.insert();
-
         
-//      if((countE) % 10 == 0){
-            for(Enemie enemie : enemies){
-                if(enemie.move()){}
+        for(Iterator<Enemie> enemie = enemies.iterator(); enemie.hasNext();){
+            Enemie next = enemie.next();
+            
+            if(next.move()){}
+            else{
+                enemie.remove();
             }
-//      }
+        }
 
         if((count % 20) == 0)
             enemies.add(ene);
         
-        countE++;
         count++;
     }
 
@@ -235,7 +306,7 @@ public class Map extends JPanel implements ActionListener {
             int key = e.getKeyCode();
             
             if(key == KeyEvent.VK_SPACE){
-                missil.add(new Missile(spaceship.getX()+5, spaceship.getY(), 1));
+                missiles.add(new Missile(spaceship.getX()+5, spaceship.getY(), 1));
             }
             else{
                 spaceship.keyPressed(e); 

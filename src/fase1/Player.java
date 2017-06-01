@@ -13,9 +13,27 @@ public class Player{
     private int score = 0;
     private int life = 3;
     private String name = "Calebe";
+    private boolean winner = false;
+    private boolean loss = false;
     
     public int getScore(){
         return this.score;
+    }
+    
+    public boolean isWinner(){
+        return this.winner;
+    }
+    
+    public void winner(boolean winner){
+        this.winner = winner;
+    }
+    
+    public void Lost(boolean loss){
+        this.loss = loss;
+    }
+    
+    public boolean getLost(){
+        return loss;
     }
     
     public int getLife(){
