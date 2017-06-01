@@ -24,8 +24,12 @@ public class Life extends Sprite{
         life();
     }
     
-    private void life(){
+    public void life(){
         loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/life.png");
+    }
+    
+    public void heart(){
+        loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/heart.png");
     }
     
     public boolean move(){

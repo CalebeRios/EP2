@@ -1,16 +1,16 @@
 package fase1;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 
 public class Application extends JFrame {
-    
+        
     public Application() {
-        
-//    	add(menu);
-        
-        add(new Map());
+        getContentPane().add(new Menu(), BorderLayout.CENTER);
+        pack();
+    //    add(new Map());
 
         setSize(Game.getWidth(), Game.getHeight());
 

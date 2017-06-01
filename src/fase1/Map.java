@@ -25,6 +25,7 @@ public class Map extends JPanel implements ActionListener {
     private int countB = 1;
     private int countL = 1;
     
+    private final Player player;
     private final Image background;
     private final Spaceship spaceship;
     private final ArrayList<Missile> missil;
@@ -42,6 +43,7 @@ public class Map extends JPanel implements ActionListener {
         
         this.background = image.getImage();
         
+        player = new Player();
         missil = new ArrayList();
         enemies = new ArrayList(); 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
@@ -64,7 +66,10 @@ public class Map extends JPanel implements ActionListener {
             drawMissile(g);
         drawBonus(g);
         drawLife(g);
-        
+        drawLifeMessage(g);
+        drawBonusMessage(g);
+        drawName(g);
+                
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -131,6 +136,46 @@ public class Map extends JPanel implements ActionListener {
         g.setColor(Color.white);
         g.setFont(font);
         g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, Game.getHeight() / 2);
+    }
+    
+    private void drawLifeMessage(Graphics g){
+        String message = "Life:";
+        Font font = new Font("Helvetiva", Font.BOLD, 14);
+        FontMetrics metric = getFontMetrics(font);
+        
+        g.setColor(Color.white);
+        g.setFont(font);
+        g.drawString(message, 0, 14);
+        
+        int j = 0;
+        life.heart();
+        int k = life.getWidth();
+        while(j < player.getLife()){
+            g.drawImage(life.getImage(), (metric.stringWidth(message) - 10) + k, 0, this);
+            j++;
+            k += life.getWidth();
+        }
+        life.life();
+    }
+    
+    private void drawName(Graphics g){
+        String message = player.getName();
+        Font font = new Font("Helvetiva", Font.BOLD, 14);
+        FontMetrics metric = getFontMetrics(font);
+        
+        g.setColor(Color.white);
+        g.setFont(font);
+        g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, 14);
+    }
+    
+    private void drawBonusMessage(Graphics g){
+        String message = "Score: " + player.getScore();
+        Font font = new Font("Helvetiva", Font.BOLD, 14);
+        FontMetrics metric = getFontMetrics(font);
+        
+        g.setColor(Color.white);
+        g.setFont(font);
+        g.drawString(message, (Game.getWidth() - metric.stringWidth(message)), 14);
     }
     
     private void updateSpaceship() {
