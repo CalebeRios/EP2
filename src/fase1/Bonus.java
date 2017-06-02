@@ -24,6 +24,10 @@ public class Bonus extends Sprite{
         bonus();
     }
     
+    public boolean isBonus(){
+        return (this != null);
+    }
+    
     public void bonus(){
         loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/bonus.png");
     }

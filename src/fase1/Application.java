@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 public class Application extends JFrame {
         
     public Application() {
-//        getContentPane().add(new Menu(), BorderLayout.CENTER);
+        //getContentPane().add(new Menu(), BorderLayout.CENTER);
         add(new Map());
 
         setSize(Game.getWidth(), Game.getHeight());

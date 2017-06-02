@@ -24,12 +24,12 @@ public class Player{
         return this.winner;
     }
     
-    public void winner(boolean winner){
-        this.winner = winner;
+    public void winner(){
+        this.winner = true;
     }
     
-    public void Lost(boolean loss){
-        this.loss = loss;
+    public void Lost(){
+        this.loss = true;
     }
     
     public boolean getLost(){

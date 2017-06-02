@@ -7,7 +7,6 @@ public class Spaceship extends Sprite {
     
     private static final int MAX_SPEED_X = 2;
     private static final int MAX_SPEED_Y = 1;
-    public Missile missil;
     
     private int speed_x;
     private int speed_y;
@@ -17,13 +16,10 @@ public class Spaceship extends Sprite {
     public Spaceship(int x, int y) {
         super(x, y);
         
-        missil = new Missile(x, y, 1);
-        
         initSpaceShip();
     }
 
     private void initSpaceShip() {
-        
         noThrust();
         
     }
@@ -34,7 +30,7 @@ public class Spaceship extends Sprite {
     
     private void thrust(){
         loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/spaceship_thrust.png");
-    }    
+    }
 
     public void move() {
         
@@ -55,7 +51,11 @@ public class Spaceship extends Sprite {
         y += speed_y;
         
     }
-
+    
+    public static Spaceship insert(){
+        return (new Spaceship(250, -400));
+    }
+    
     public void keyPressed(KeyEvent e) {
 
         int key = e.getKeyCode();

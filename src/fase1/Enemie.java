@@ -48,7 +48,7 @@ public class Enemie extends Sprite{
         
         while(i < amount){
             int ranX = randX.nextInt(490)+5;
-            //int ranY = randY.nextInt(100);
+            
             enemie.add(new Enemie(ranX, -200));
             i++;
         }

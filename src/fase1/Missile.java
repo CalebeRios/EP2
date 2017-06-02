@@ -30,14 +30,6 @@ public class Missile extends Sprite{
     private void missile(){
         loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/missile.png");
     }
-    
-    public void explosion(){
-        explosionMissile();
-    }
-            
-    private void explosionMissile(){
-        loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/explosion.png");        
-    }
       
     public boolean move(){
         if(y + this.width >= Game.getWidth()){
