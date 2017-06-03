@@ -15,6 +15,14 @@ public class Player{
     private String name = "Calebe";
     private boolean winner = false;
     private boolean loss = false;
+    public boolean chave = true;
+    
+    public Player(){}
+    
+    public Player(String name, int score){
+        this.name = name;
+        this.score = score;
+    }
     
     public int getScore(){
         return this.score;

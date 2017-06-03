@@ -12,7 +12,8 @@ import java.util.Random;
  * @author caleberios
  */
 public class Bonus extends Sprite{
-    private int speed_y = 1;
+    private int speed_y;
+    private int difficulty = 0;
     
     public Bonus(int x, int y){
         super(x,y);
@@ -22,6 +23,10 @@ public class Bonus extends Sprite{
     
     public void initBonus(){
         bonus();
+    }
+    
+    public void setDifficulty(int difficulty){
+        this.difficulty = difficulty;
     }
     
     public boolean isBonus(){
@@ -34,6 +39,14 @@ public class Bonus extends Sprite{
     
     public boolean move(){
         if(y + this.width <= Game.getWidth()){
+            if(this.difficulty == 0)
+                this.speed_y = 1;
+            else if(this.difficulty == 1)
+                this.speed_y = 2;
+            else
+                this.speed_y = 3;
+            
+            
             y += speed_y;
             return true;
         }

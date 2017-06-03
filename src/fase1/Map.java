@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -26,6 +28,7 @@ public class Map extends JPanel implements ActionListener {
     private int countL = 1;
     private int countS = 100;
     private int count = 0;
+    private int countGame = 0;
     
     private final Player player;
     private final Image background;
@@ -65,9 +68,15 @@ public class Map extends JPanel implements ActionListener {
         if(countS > 10 || (countS% 3) != 0){
             drawSpaceship(g);
             countS += 2;
-        }else if(player.getLost())
+        }else if(player.getLost()){
+            if(count == 0){
+                try{Ranking.insert(player);} catch(IOException ex){}
+                try{Ranking.list();} catch(FileNotFoundException ex){} catch (IOException ex) {}
+                count++;
+            }
             drawGameOver(g);
-        else
+            countGame = 0;
+        }else
             countS++;
         drawEnemie(g);
         if(!missiles.isEmpty())
@@ -77,10 +86,9 @@ public class Map extends JPanel implements ActionListener {
         drawLifeMessage(g);
         drawBonusMessage(g);
         drawName(g);
-        if(player.getLost() && countL < 100){
-            
-            count++;
-        }
+        if(player.isWinner())
+            drawMissionAccomplished(g);
+        
         
         Toolkit.getDefaultToolkit().sync();
     }
@@ -127,8 +135,11 @@ public class Map extends JPanel implements ActionListener {
             updateMissile();
         updateBonus();
         updateLife();
-        Collision();
+        if(!player.isWinner())
+            Collision();
         updatePlayer();
+        
+        countGame++;
         
         repaint();
     }
@@ -195,29 +206,6 @@ public class Map extends JPanel implements ActionListener {
         g.drawString(message, (Game.getWidth() - metric.stringWidth(message)), 14);
     }
     
-    private void updateSpaceship() {
-        spaceship.move();
-    }
-    
-    private void updatePlayer(){
-        if(player.getLife() == 0)
-            player.Lost();
-        if(player.getScore() == 50)
-            player.winner();
-    }
-    
-    private void updateMissile(){
-        
-        for(Iterator<Missile> missil = missiles.iterator(); missil.hasNext();){
-            Missile next = missil.next();
-            
-            if(next.move()){}
-            else{
-                missil.remove();
-            }
-        }
-    }
-    
     private void Collision(){
         if((spaceship.getX() > life.getX() && spaceship.getX() <= (life.getX() + life.getWidth()) 
                 || ((spaceship.getX() + spaceship.getWidth()) >= life.getX() 
@@ -225,7 +213,8 @@ public class Map extends JPanel implements ActionListener {
             if((spaceship.getY() > life.getY() && spaceship.getY() <= (life.getY() + life.getHeight()) 
                     || ((spaceship.getY() + spaceship.getHeight()) >= life.getY() 
                     && (spaceship.getY() + spaceship.getHeight()) <= life.getY() + life.getHeight()))){
-                player.gainLife();
+                if(!player.isWinner() && !player.getLost())
+                    player.gainLife();
                 life = Life.insert();
             }
         }
@@ -236,7 +225,8 @@ public class Map extends JPanel implements ActionListener {
             if((spaceship.getY() > bonus.getY() && spaceship.getY() <= (bonus.getY() + bonus.getHeight()) 
                     || ((spaceship.getY() + spaceship.getHeight()) >= bonus.getY() 
                     && (spaceship.getY() + spaceship.getHeight()) <= bonus.getY() + bonus.getHeight()))){
-                player.gainScore(10);
+                if(!player.getLost() && !player.isWinner())
+                    player.gainScore(10);
                 bonus = Bonus.insert();
             }
         }
@@ -268,18 +258,60 @@ public class Map extends JPanel implements ActionListener {
                     if((next.getY() > nexte.getY() && next.getY() <= (nexte.getY() + nexte.getHeight()) 
                             || ((next.getY() + next.getHeight()) >= nexte.getY() 
                             && (next.getY() + next.getHeight()) <= nexte.getY() + nexte.getHeight()))){
+                        if(nexte.getDifficulty() == 0 && !player.getLost())
+                            player.gainScore(1);
+                        else if(nexte.getDifficulty() == 1 && !player.getLost())
+                            player.gainScore(2);
+                        else if(nexte.getDifficulty() == 2 && !player.getLost())
+                            player.gainScore(3);
                         missil.remove();
                         enemie.remove();
-                        player.gainScore(1);
                     }
                 }
             }
         }
     }
+
+    private void updateSpaceship() {
+        spaceship.move();
+    }
+    
+    private void updatePlayer(){
+        if(player.getLife() == 0)
+            player.Lost();
+        if(countGame == 1000000000)
+            player.winner();
+    }
+    
+    private void updateMissile(){
+        
+        for(Iterator<Missile> missil = missiles.iterator(); missil.hasNext();){
+            Missile next = missil.next();
+            
+            if(next.move()){}
+            else{
+                missil.remove();
+            }
+        }
+    }
     
     private void updateEnemie(){
-        Enemie ene = Enemie.insert();
+        Enemie ene = null;
         
+        if(!player.isWinner()){
+            if(player.getScore() > 50 && player.getScore() < 100){
+                ene = Enemie.insert(1);
+                bonus.setDifficulty(1);
+                life.setDifficulty(1);
+            }
+            else if(player.getScore() >= 100){
+                ene = Enemie.insert(2);
+                bonus.setDifficulty(2);
+                life.setDifficulty(2);
+            }
+            else
+                ene = Enemie.insert(0);
+        }
         for(Iterator<Enemie> enemie = enemies.iterator(); enemie.hasNext();){
             Enemie next = enemie.next();
             
@@ -289,7 +321,7 @@ public class Map extends JPanel implements ActionListener {
             }
         }
 
-        if((countE % 20) == 0)
+        if((countE % 20) == 0 && !player.isWinner())
             enemies.add(ene);
         
         countE++;
@@ -297,7 +329,7 @@ public class Map extends JPanel implements ActionListener {
 
     private void updateBonus(){
         if(bonus.move()){}
-        else if(!bonus.move() && (countB % 200) == 0){
+        else if(!bonus.move() && (countB % 200) == 0 && !player.isWinner()){
             bonus = Bonus.insert();
         }
         
@@ -306,7 +338,7 @@ public class Map extends JPanel implements ActionListener {
     
     private void updateLife(){
         if(life.move()){}
-        else if(life.move() == false && (countL % 500) == 0){
+        else if(life.move() == false && (countL % 500) == 0 && !player.isWinner()){
             life = Life.insert();
         }
         

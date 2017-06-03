@@ -14,20 +14,48 @@ import java.util.Random;
  */
 public class Enemie extends Sprite{
     
-    private int speed_y = 1;
+    private int speed_y;
+    private int difficulty;
     
-    public Enemie(int x, int y){
+    public Enemie(int x, int y, int difficulty){
         super(x,y);
         
-        initEnemie();
+        this.difficulty = difficulty;
+        
+        if(this.difficulty == 0)
+            initEnemieEasy();
+        else if(this.difficulty == 1)
+            initEnemieMedium();
+        else
+            initEnemyHard();
     }
     
-    private void initEnemie(){
-        enemie();
+    public int getDifficulty(){
+        return this.difficulty;
     }
     
-    private void enemie(){
+    private void initEnemieEasy(){
+        enemieEasy();
+    }
+    
+    private void enemieEasy(){
         loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/alien_EASY.png");
+    }
+    
+    private void enemyMedium(){
+        loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/alien_MEDIUM.png");        
+    }
+    
+    public void initEnemieMedium(){
+        enemyMedium();
+    }
+    
+    private void enemyHard(){
+        loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/alien_HARD.png");
+    }
+    
+    public void initEnemyHard(){
+        enemyHard();
     }
     
     public boolean move(){
@@ -35,31 +63,22 @@ public class Enemie extends Sprite{
             return false;
         }
         
+        if(this.difficulty == 0)
+            this.speed_y = 1;
+        else if(this.difficulty == 1)
+            this.speed_y = 2;
+        else
+            this.speed_y = 3;
+            
         y += speed_y;
         
         return true;
     }
     
-    public static ArrayList<Enemie> insert(int amount){
-        int i = 0;
-        ArrayList<Enemie> enemie = new ArrayList();
+    public static Enemie insert(int difficulty){
         Random randX = new Random();    
         Random randY = new Random();
         
-        while(i < amount){
-            int ranX = randX.nextInt(490)+5;
-            
-            enemie.add(new Enemie(ranX, -200));
-            i++;
-        }
-        
-        return enemie;
-    }
-    
-    public static Enemie insert(){
-        Random randX = new Random();    
-        Random randY = new Random();
-        
-        return new Enemie(randX.nextInt(480) + 10, -100);
+        return new Enemie(randX.nextInt(480) + 10, -100, difficulty);
     }
 }
