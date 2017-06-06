@@ -5,6 +5,8 @@
  */
 package fase1;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -14,6 +16,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import static java.util.Collections.sort;
 import java.util.Comparator;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 
 /**
@@ -24,11 +31,17 @@ public class Ranking {
     private static ArrayList<Player> players;
     
     public static void list() throws FileNotFoundException, IOException{
+        JFrame rank = new JFrame();
+        JPanel panel = new JPanel();
+        JButton back = new JButton();
         players = new ArrayList();
+        StringBuffer buffer = new StringBuffer();  
+        String message = null;
         BufferedReader ranking = new BufferedReader(new FileReader("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/doc/ranking.txt"));
         
         while(ranking.ready() ){
             String linhas = ranking.readLine();
+
             int i = linhas.length();
          
             char player[] = linhas.toCharArray();
@@ -68,8 +81,33 @@ public class Ranking {
         });
         
         for(Player player : players){
-            System.out.println(player.getName() + " " + player.getScore());
+            buffer.append(player.getName() + " " + player.getScore());
+            buffer.append('\n');
         }
+        
+        rank.setTitle("Space Combat Game");
+        rank.setSize(Game.getWidth(), Game.getHeight());
+        rank.setResizable(false);
+        rank.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        rank.setLocationRelativeTo(null);
+        rank.setVisible(true);
+        
+        back.setText("Back");
+        back.setBounds(0, 427, 150, 40);
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rank.dispose();
+                Application app = new Application();
+            }
+        });
+        
+        panel.setLayout(null);
+        
+        panel.add(back);
+        panel.add(new JTextArea("Teste!"));
+        
+        rank.add(panel);
     }    
 
     public static void insert(Player player) throws IOException{

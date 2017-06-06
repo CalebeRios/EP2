@@ -1,6 +1,7 @@
 package fase1;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -37,10 +38,13 @@ public class Map extends JPanel implements ActionListener {
     private final ArrayList<Enemie> enemies;
     private Bonus bonus;
     private Life life;
+    private JPanel ranking;
+    private boolean pause = false;
     
-    public Map() {
+    public Map(String name) {
         
         addKeyListener(new KeyListerner());
+        setPreferredSize(new Dimension(500, 500));
         
         setFocusable(true);
         setDoubleBuffered(true);
@@ -48,7 +52,7 @@ public class Map extends JPanel implements ActionListener {
         
         this.background = image.getImage();
         
-        player = new Player();
+        this.player = new Player(name);
         missiles = new ArrayList();
         enemies = new ArrayList(); 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
@@ -65,34 +69,55 @@ public class Map extends JPanel implements ActionListener {
         super.paintComponent(g);
         
         g.drawImage(this.background, 0, 0, null);
-        if(countS > 10 || (countS% 3) != 0){
-            drawSpaceship(g);
-            countS += 2;
-        }else if(player.getLost()){
-            if(count == 0){
-                try{Ranking.insert(player);} catch(IOException ex){}
-                try{Ranking.list();} catch(FileNotFoundException ex){} catch (IOException ex) {}
-                count++;
-            }
-            drawGameOver(g);
-            countGame = 0;
-        }else
-            countS++;
-        drawEnemie(g);
-        if(!missiles.isEmpty())
-            drawMissile(g);
-        drawBonus(g);
-        drawLife(g);
-        drawLifeMessage(g);
-        drawBonusMessage(g);
-        drawName(g);
-        if(player.isWinner())
-            drawMissionAccomplished(g);
-        
+        if(!pause){
+            if(countS > 10 || (countS% 3) != 0){
+                drawSpaceship(g);
+                countS += 2;
+            }else if(player.getLost()){
+                if(count == 0){
+                    try{Ranking.insert(player);} catch(IOException ex){}
+                    //try{Ranking.list();} catch(FileNotFoundException ex){} catch (IOException ex) {}
+                    count++;
+                }
+                drawGameOver(g);
+                countGame = 0;
+            }else
+                countS++;
+            drawEnemie(g);
+            if(!missiles.isEmpty())
+                drawMissile(g);
+            drawBonus(g);
+            drawLife(g);
+            drawLifeMessage(g);
+            drawBonusMessage(g);
+            drawName(g);
+            if(player.isWinner())
+                drawMissionAccomplished(g);
+
+            //if(player.isWinner() || player.getLost())
+            //    drawRanking(g);
+        }else{
+            drawPause(g);
+        }
         
         Toolkit.getDefaultToolkit().sync();
     }
 
+    private void drawRanking(Graphics g){
+        ranking = new JPanel();
+        
+        ranking.setLayout(null);
+        ranking.setVisible(true);
+        ranking.setBounds(150, 150, 200, 200);
+        ranking.setBackground(Color.red);
+        add(ranking);
+        
+        //try{Ranking.list(g);} catch(FileNotFoundException ex){} catch (IOException ex) {}
+        
+        drawMissionAccomplished(g);
+        
+    }
+    
     private void drawSpaceship(Graphics g) {
                
         // Draw spaceship
@@ -126,22 +151,35 @@ public class Map extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        if(!player.getLost())
-            updateSpaceship();
-        else
-            spaceship = Spaceship.insert();
-        updateEnemie();
-        if(!missiles.isEmpty())
-            updateMissile();
-        updateBonus();
-        updateLife();
-        if(!player.isWinner())
-            Collision();
-        updatePlayer();
-        
-        countGame++;
+        if(!pause){            
+            if(!player.getLost())
+                updateSpaceship();
+            else
+                spaceship = Spaceship.insert();
+            updateEnemie();
+            if(!missiles.isEmpty())
+                updateMissile();
+            updateBonus();
+            updateLife();
+            if(!player.isWinner())
+                Collision();
+            updatePlayer();
+
+            countGame++;
+        }
         
         repaint();
+    }
+    
+    private void drawPause(Graphics g) {
+
+        String message = "PAUSED!";
+        Font font = new Font("Helvetica", Font.BOLD, 14);
+        FontMetrics metric = getFontMetrics(font);
+
+        g.setColor(Color.white);
+        g.setFont(font);
+        g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, Game.getHeight() / 2);
     }
     
     private void drawMissionAccomplished(Graphics g) {
@@ -279,7 +317,7 @@ public class Map extends JPanel implements ActionListener {
     private void updatePlayer(){
         if(player.getLife() == 0)
             player.Lost();
-        if(countGame == 1000000000)
+        if(countGame == 100000)
             player.winner();
     }
     
@@ -320,10 +358,17 @@ public class Map extends JPanel implements ActionListener {
                 enemie.remove();
             }
         }
-
-        if((countE % 20) == 0 && !player.isWinner())
-            enemies.add(ene);
         
+        if(ene.getDifficulty() == 0){
+            if((countE % 20) == 0 && !player.isWinner())
+                enemies.add(ene);
+        }else if(ene.getDifficulty() == 1){
+            if((countE % 15) == 0 && !player.isWinner())
+                enemies.add(ene);            
+        }else{
+            if((countE % 5) == 0 && !player.isWinner())
+                enemies.add(ene);               
+        }
         countE++;
     }
 
@@ -338,7 +383,7 @@ public class Map extends JPanel implements ActionListener {
     
     private void updateLife(){
         if(life.move()){}
-        else if(life.move() == false && (countL % 500) == 0 && !player.isWinner()){
+        else if(life.move() == false && (countL % 1000) == 0 && !player.isWinner()){
             life = Life.insert();
         }
         
@@ -351,16 +396,14 @@ public class Map extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             
-            if(key == KeyEvent.VK_SPACE){
-                missiles.add(new Missile(spaceship.getX()+5, spaceship.getY(), 1));
-            }
-            else if(key == KeyEvent.VK_ENTER){
-                while(true){
-                    
+            if(key == KeyEvent.VK_ENTER){
+                pause = !pause;
+            }else{
+                if(key == KeyEvent.VK_SPACE){
+                    missiles.add(new Missile(spaceship.getX()+5, spaceship.getY(), 1));
+                }else{
+                    spaceship.keyPressed(e); 
                 }
-            }
-            else{
-                spaceship.keyPressed(e); 
             }
         }
 

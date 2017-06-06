@@ -12,7 +12,7 @@ package fase1;
 public class Player{
     private int score = 0;
     private int life = 3;
-    private String name = "Calebe";
+    private String name;
     private boolean winner = false;
     private boolean loss = false;
     public boolean chave = true;
@@ -22,6 +22,10 @@ public class Player{
     public Player(String name, int score){
         this.name = name;
         this.score = score;
+    }
+    
+    public Player(String name){
+        this.name = name;
     }
     
     public int getScore(){

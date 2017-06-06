@@ -5,7 +5,6 @@
  */
 package fase1;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -15,7 +14,7 @@ import java.util.Random;
 public class Enemie extends Sprite{
     
     private int speed_y;
-    private int difficulty;
+    private final int difficulty;
     
     public Enemie(int x, int y, int difficulty){
         super(x,y);
@@ -77,7 +76,6 @@ public class Enemie extends Sprite{
     
     public static Enemie insert(int difficulty){
         Random randX = new Random();    
-        Random randY = new Random();
         
         return new Enemie(randX.nextInt(480) + 10, -100, difficulty);
     }
