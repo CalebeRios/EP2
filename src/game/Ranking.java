@@ -91,7 +91,7 @@ public class Ranking {
             i++;
         }
 
-        rank.setTitle("Space Combat Game");
+        rank.setTitle("Space and Aliens");
         rank.setSize(Game.getWidth(), Game.getHeight());
         rank.setResizable(false);
         rank.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

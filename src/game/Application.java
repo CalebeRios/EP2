@@ -27,7 +27,7 @@ public class Application{
 
         game.add(new Map(text.getText(), game));
 
-        game.setTitle("Space Combat Game");
+        game.setTitle("Space and Aliens");
         game.setSize(Game.getWidth(), Game.getHeight());
         game.setResizable(false);
         game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +44,7 @@ public class Application{
         Ranking rank = new Ranking();
         JLabel title = new JLabel();
 
-        menu.setTitle("Space Combat Game");
+        menu.setTitle("Space and Aliens");
         menu.setSize(Game.getWidth(), Game.getHeight());
         menu.setResizable(false);
         menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +56,7 @@ public class Application{
         panel.setDoubleBuffered(true);
         panel.setBackground(Color.black);
 
-        title.setText("Space And Aliens");
+        title.setText("Space and Aliens");
         title.setFont(new Font("Purisa", Font.BOLD, 30));
         title.setForeground(Color.WHITE);
         title.setBounds(100, 100, 500, 40);
@@ -120,7 +120,7 @@ public class Application{
         label.setText("Nome sem espaços em branco!");
         label.setBounds(160, 230, 200, 30);
 
-        nome.setTitle("Space Combat Game");
+        nome.setTitle("Space and Aliens");
         nome.setSize(Game.getWidth(), Game.getHeight());
         nome.setResizable(false);
         nome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
