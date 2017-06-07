@@ -1,4 +1,4 @@
-package fase1;
+package game;
 
 public final class Game {
     

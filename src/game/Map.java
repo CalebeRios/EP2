@@ -1,4 +1,4 @@
-package fase1;
+package game;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,13 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 public class Map extends JPanel implements ActionListener {
 
@@ -30,6 +32,7 @@ public class Map extends JPanel implements ActionListener {
     private int countS = 100;
     private int count = 0;
     private int countGame = 0;
+    private int countEx = 0;
     
     private final Player player;
     private final Image background;
@@ -40,21 +43,23 @@ public class Map extends JPanel implements ActionListener {
     private Life life;
     private JPanel ranking;
     private boolean pause = false;
+    private JFrame mainframe;
     
-    public Map(String name) {
+    public Map(String name, JFrame mainframe) {
         
         addKeyListener(new KeyListerner());
         setPreferredSize(new Dimension(500, 500));
         
         setFocusable(true);
         setDoubleBuffered(true);
-        ImageIcon image = new ImageIcon("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/space.jpg");
+        ImageIcon image = new ImageIcon("Assets/images/space.jpg");
         
         this.background = image.getImage();
         
+        this.mainframe = mainframe;
         this.player = new Player(name);
-        missiles = new ArrayList();
-        enemies = new ArrayList(); 
+        missiles = new ArrayList<>();
+        enemies = new ArrayList<>(); 
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
         bonus = Bonus.insert();
         life = Life.insert();
@@ -74,13 +79,19 @@ public class Map extends JPanel implements ActionListener {
                 drawSpaceship(g);
                 countS += 2;
             }else if(player.getLost()){
+                spaceship.explosion();
+                if(countEx < 40)
+                    drawSpaceship(g);
+                else
+                    spaceship = Spaceship.insert();
                 if(count == 0){
                     try{Ranking.insert(player);} catch(IOException ex){}
-                    //try{Ranking.list();} catch(FileNotFoundException ex){} catch (IOException ex) {}
+                    restart();                    
                     count++;
                 }
                 drawGameOver(g);
                 countGame = 0;
+                countEx += 1;
             }else
                 countS++;
             drawEnemie(g);
@@ -91,16 +102,41 @@ public class Map extends JPanel implements ActionListener {
             drawLifeMessage(g);
             drawBonusMessage(g);
             drawName(g);
-            if(player.isWinner())
+            if(player.isWinner()){
                 drawMissionAccomplished(g);
-
-            //if(player.isWinner() || player.getLost())
-            //    drawRanking(g);
+                restart();
+            }
         }else{
             drawPause(g);
         }
         
         Toolkit.getDefaultToolkit().sync();
+    }
+    
+    private void restart(){
+        JButton restart = new JButton("Restart");
+        JButton menu = new JButton("Menu");
+
+        restart.setBounds(80, 270, 150, 40);
+        restart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainframe.dispose();
+                Application.game();
+            }
+        });
+
+        menu.setBounds(270, 270, 150, 40);
+        menu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainframe.dispose();
+                Application app = new Application();
+            }
+        });
+
+        add(restart);
+        add(menu);
     }
 
     private void drawRanking(Graphics g){
@@ -111,8 +147,6 @@ public class Map extends JPanel implements ActionListener {
         ranking.setBounds(150, 150, 200, 200);
         ranking.setBackground(Color.red);
         add(ranking);
-        
-        //try{Ranking.list(g);} catch(FileNotFoundException ex){} catch (IOException ex) {}
         
         drawMissionAccomplished(g);
         
@@ -154,8 +188,8 @@ public class Map extends JPanel implements ActionListener {
         if(!pause){            
             if(!player.getLost())
                 updateSpaceship();
-            else
-                spaceship = Spaceship.insert();
+            //else
+                //spaceship = Spaceship.insert();
             updateEnemie();
             if(!missiles.isEmpty())
                 updateMissile();
@@ -317,7 +351,7 @@ public class Map extends JPanel implements ActionListener {
     private void updatePlayer(){
         if(player.getLife() == 0)
             player.Lost();
-        if(countGame == 100000)
+        if(countGame == 10000)
             player.winner();
     }
     
@@ -337,12 +371,12 @@ public class Map extends JPanel implements ActionListener {
         Enemie ene = null;
         
         if(!player.isWinner()){
-            if(player.getScore() > 50 && player.getScore() < 100){
+            if(player.getScore() >= 100 && player.getScore() < 200){
                 ene = Enemie.insert(1);
                 bonus.setDifficulty(1);
                 life.setDifficulty(1);
             }
-            else if(player.getScore() >= 100){
+            else if(player.getScore() >= 200){
                 ene = Enemie.insert(2);
                 bonus.setDifficulty(2);
                 life.setDifficulty(2);

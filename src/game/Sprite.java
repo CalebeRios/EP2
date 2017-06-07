@@ -1,4 +1,4 @@
-package fase1;
+package game;
 
 import java.awt.Rectangle;
 import java.awt.Image;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fase1;
+package game;
 
 import java.util.Random;
 
@@ -14,29 +14,29 @@ import java.util.Random;
 public class Bonus extends Sprite{
     private int speed_y;
     private int difficulty = 0;
-    
+
     public Bonus(int x, int y){
         super(x,y);
-        
+
         initBonus();
     }
-    
+
     public void initBonus(){
         bonus();
     }
-    
+
     public void setDifficulty(int difficulty){
         this.difficulty = difficulty;
     }
-    
+
     public boolean isBonus(){
         return (this != null);
     }
-    
+
     public void bonus(){
-        loadImage("/home/caleberios/Documents/UnB/4Sem/OO/JAVA/EP2/Assets/images/fase1/bonus.png");
+        loadImage("Assets/images/bonus.png");
     }
-    
+
     public boolean move(){
         if(y + this.width <= Game.getWidth()){
             if(this.difficulty == 0)
@@ -45,20 +45,20 @@ public class Bonus extends Sprite{
                 this.speed_y = 2;
             else
                 this.speed_y = 3;
-            
-            
+
+
             y += speed_y;
             return true;
         }
-        
+
         return false;
     }
-    
+
     public static Bonus insert(){
         Random randX = new Random();
-        
+
         Bonus bonus = new Bonus(randX.nextInt(500), -300);
-        
+
         return bonus;
     }
 }
