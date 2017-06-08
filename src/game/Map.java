@@ -104,14 +104,20 @@ public class Map extends JPanel implements ActionListener {
             drawEnemie(g);
             if(!missiles.isEmpty())
                 drawMissile(g);
-            drawBonus(g);
-            drawLife(g);
+            if(!player.isWinner()){
+                drawBonus(g);
+                drawLife(g);
+            }
             drawLifeMessage(g);
             drawBonusMessage(g);
             drawName(g);
             if(player.isWinner()){
+                if(count == 0){
+                    try{rank.insert(player);} catch(IOException ex){}
+                    restart();                    
+                    count++;
+                }
                 drawMissionAccomplished(g);
-                restart();
             }
         }else{
             drawPause(g);
@@ -195,8 +201,6 @@ public class Map extends JPanel implements ActionListener {
         if(!pause){            
             if(!player.getLost())
                 updateSpaceship();
-            //else
-                //spaceship = Spaceship.insert();
             updateEnemie();
             if(!missiles.isEmpty())
                 updateMissile();
@@ -358,7 +362,7 @@ public class Map extends JPanel implements ActionListener {
     private void updatePlayer(){
         if(player.getLife() == 0)
             player.Lost();
-        if(countGame == 10000)
+        if(countGame == 10)
             player.winner();
     }
     
@@ -390,27 +394,35 @@ public class Map extends JPanel implements ActionListener {
             }
             else
                 ene = Enemie.insert(0);
-        }
-        for(Iterator<Enemie> enemie = enemies.iterator(); enemie.hasNext();){
-            Enemie next = enemie.next();
-            
-            if(next.move()){}
-            else{
+        
+            for(Iterator<Enemie> enemie = enemies.iterator(); enemie.hasNext();){
+                Enemie next = enemie.next();
+
+                if(next.move()){}
+                else{
+                    enemie.remove();
+                }
+            }
+        
+
+            if(ene.getDifficulty() == 0){
+                if((countE % 20) == 0 && !player.isWinner())
+                    enemies.add(ene);
+            }else if(ene.getDifficulty() == 1){
+                if((countE % 15) == 0 && !player.isWinner())
+                    enemies.add(ene);            
+            }else{
+                if((countE % 5) == 0 && !player.isWinner())
+                    enemies.add(ene);               
+            }
+            countE++;
+        }else{
+            for(Iterator<Enemie> enemie = enemies.iterator(); enemie.hasNext();){
+                Enemie next = enemie.next();
+
                 enemie.remove();
             }
         }
-        
-        if(ene.getDifficulty() == 0){
-            if((countE % 20) == 0 && !player.isWinner())
-                enemies.add(ene);
-        }else if(ene.getDifficulty() == 1){
-            if((countE % 15) == 0 && !player.isWinner())
-                enemies.add(ene);            
-        }else{
-            if((countE % 5) == 0 && !player.isWinner())
-                enemies.add(ene);               
-        }
-        countE++;
     }
 
     private void updateBonus(){
