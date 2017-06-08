@@ -28,7 +28,13 @@ public class Missile extends Sprite{
     }
 
     private void missile(){
-        loadImage("Assets/images/missile.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/missile.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/missile.png"));
+        }
     }
 
     public boolean move(){

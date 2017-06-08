@@ -25,15 +25,33 @@ public class Spaceship extends Sprite {
     }
 
     private void noThrust(){
-        loadImage("Assets/images/spaceship.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/spaceship.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/spaceship.png"));
+        }
     }
 
     private void thrust(){
-        loadImage("Assets/images/spaceship_thrust.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/spaceship_thrust.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/spaceship_thrust.png"));
+        }
     }
 
     public void explosion(){
-        loadImage("Assets/images/explosion.png");        
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/explosion.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/explosion.png"));
+        }
     }
     
     public void move() {

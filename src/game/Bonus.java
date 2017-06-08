@@ -34,7 +34,13 @@ public class Bonus extends Sprite{
     }
 
     public void bonus(){
-        loadImage("Assets/images/bonus.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/bonus.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/bonus.png"));
+        }
     }
 
     public boolean move(){

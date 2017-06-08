@@ -46,13 +46,19 @@ public class Map extends JPanel implements ActionListener {
     private JFrame mainframe;
     
     public Map(String name, JFrame mainframe) {
+        ImageIcon image;
         
         addKeyListener(new KeyListerner());
         setPreferredSize(new Dimension(500, 500));
-        
+      
         setFocusable(true);
         setDoubleBuffered(true);
-        ImageIcon image = new ImageIcon("Assets/images/space.jpg");
+        String path = getClass().getResource("").getPath();
+        if(path.contains("jar!")){
+            image = new ImageIcon(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/space.jpg"));
+        }else{
+            image = new ImageIcon(path.replace("/build/classes/game/", "/assets/images/space.jpg"));
+        }
         
         this.background = image.getImage();
         
@@ -72,6 +78,7 @@ public class Map extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Ranking rank = new Ranking();
         
         g.drawImage(this.background, 0, 0, null);
         if(!pause){
@@ -85,7 +92,7 @@ public class Map extends JPanel implements ActionListener {
                 else
                     spaceship = Spaceship.insert();
                 if(count == 0){
-                    try{Ranking.insert(player);} catch(IOException ex){}
+                    try{rank.insert(player);} catch(IOException ex){}
                     restart();                    
                     count++;
                 }

@@ -31,11 +31,23 @@ public class Life extends Sprite{
     }
 
     public void life(){
-        loadImage("Assets/images/life.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/life.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/life.png"));
+        }
     }
 
     public void heart(){
-        loadImage("Assets/images/heart.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/heart.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/heart.png"));
+        }
     }
 
     public boolean move(){

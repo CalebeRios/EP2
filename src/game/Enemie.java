@@ -38,11 +38,23 @@ public class Enemie extends Sprite{
     }
 
     private void enemieEasy(){
-        loadImage("Assets/images/alien_EASY.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/alien_EASY.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/alien_EASY.png"));
+        }
     }
 
     private void enemyMedium(){
-        loadImage("Assets/images/alien_MEDIUM.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/alien_MEDIUM.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/alien_MEDIUM.png"));
+        }
     }
 
     public void initEnemieMedium(){
@@ -50,7 +62,13 @@ public class Enemie extends Sprite{
     }
 
     private void enemyHard(){
-        loadImage("Assets/images/alien_HARD.png");
+        String path = getClass().getResource("").getPath().toString();
+        if(path.contains("jar!")){
+            loadImage(path.replace("file:", "").replace("/dist/EP2.jar!/game/", "/assets/images/alien_HARD.png"));
+        }
+        else{
+            loadImage(path.replace("/build/classes/game/", "/assets/images/alien_HARD.png"));
+        }
     }
 
     public void initEnemyHard(){

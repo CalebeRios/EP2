@@ -32,7 +32,7 @@ import javax.swing.JTextArea;
 public class Ranking {
     private static ArrayList<Player> players;
 
-    public static void list() throws FileNotFoundException, IOException{
+    public void list() throws FileNotFoundException, IOException{
         JFrame rank = new JFrame();
         JPanel panel = new JPanel();
         JLabel label = new JLabel();
@@ -40,7 +40,16 @@ public class Ranking {
         players = new ArrayList();
         StringBuffer buffer = new StringBuffer();
         String message = null;
-        BufferedReader ranking = new BufferedReader(new FileReader("Assets/doc/ranking.txt"));
+        BufferedReader ranking;
+        String path;
+        path = this.getClass().getResource("").getPath();
+        if(path.contains("jar!")){
+            ranking = new BufferedReader(new FileReader(path.replace("file:", "").replace("dist/EP2.jar!/game/", "assets/doc/ranking.txt")));        
+        }
+        else{
+            ranking = new BufferedReader(new FileReader(path.replace("build/classes/game/", "assets/doc/ranking.txt")));
+        }
+
 
         while(ranking.ready() ){
             String linhas = ranking.readLine();
@@ -131,8 +140,17 @@ public class Ranking {
         rank.add(panel);
     }
 
-    public static void insert(Player player) throws IOException{
-        BufferedWriter ranking = new BufferedWriter(new FileWriter("Assets/doc/ranking.txt", true));
+    public void insert(Player player) throws IOException{
+        String path;
+        BufferedWriter ranking;
+        path = this.getClass().getResource("").getPath();
+        if(path.contains("jar!")){
+            ranking = new BufferedWriter(new FileWriter(path.replace("file:", "").replace("dist/EP2.jar!/game/", "assets/doc/ranking.txt"), true));        
+        }
+        else{
+            ranking = new BufferedWriter(new FileWriter(path.replace("build/classes/game/", "assets/doc/ranking.txt"), true));
+        }
+        
         ranking.append(player.getName() + " " + player.getScore());
 
         ranking.newLine();
