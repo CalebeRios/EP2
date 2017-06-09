@@ -362,7 +362,7 @@ public class Map extends JPanel implements ActionListener {
     private void updatePlayer(){
         if(player.getLife() == 0)
             player.Lost();
-        if(countGame == 10)
+        if(countGame == 100000)
             player.winner();
     }
     
