@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -207,7 +206,7 @@ public class Map extends JPanel implements ActionListener {
             updateBonus();
             updateLife();
             if(!player.isWinner())
-                Collision();
+                collision();
             updatePlayer();
 
             countGame++;
@@ -289,7 +288,7 @@ public class Map extends JPanel implements ActionListener {
         g.drawString(message, (Game.getWidth() - metric.stringWidth(message)), 14);
     }
     
-    private void Collision(){
+    private void collision(){
         if((spaceship.getX() > life.getX() && spaceship.getX() <= (life.getX() + life.getWidth()) 
                 || ((spaceship.getX() + spaceship.getWidth()) >= life.getX() 
                 && (spaceship.getX() + spaceship.getWidth()) <= life.getX() + life.getWidth()))){
@@ -361,7 +360,7 @@ public class Map extends JPanel implements ActionListener {
     
     private void updatePlayer(){
         if(player.getLife() == 0)
-            player.Lost();
+            player.lost();
         if(countGame == 100000)
             player.winner();
     }

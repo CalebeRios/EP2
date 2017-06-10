@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 public class Application{
     private static JTextField text = new JTextField();
+    private static Map map;
 
     public Application() {
         menu();
@@ -25,7 +26,7 @@ public class Application{
     public static void game(){
         JFrame game = new JFrame();
 
-        game.add(new Map(text.getText(), game));
+        game.add(map = new Map(text.getText(), game));
 
         game.setTitle("Space and Aliens");
         game.setSize(Game.getWidth(), Game.getHeight());

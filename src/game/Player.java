@@ -15,7 +15,6 @@ public class Player{
     private String name;
     private boolean winner = false;
     private boolean loss = false;
-    public boolean chave = true;
 
     public Player(){}
 
@@ -40,7 +39,7 @@ public class Player{
         this.winner = true;
     }
 
-    public void Lost(){
+    public void lost(){
         this.loss = true;
     }
 
