@@ -55,9 +55,10 @@ Sendo assim, a ideia do jogo é conseguir destruir o máximo de naves inimigas p
 
 ## Jogabilidade
 
-Para movimentar sua nave, você pode usar as setas, e para atirar, utilize a barra de espaço:
+Você pode: movimentar sua nave, usando as setas; atirar, pressionando barra de espaço; e pausar, aperte enter:
 
 ![Combo](http://3.bp.blogspot.com/-U9zSHzHfKts/UUdwIi6YHBI/AAAAAAAAAHs/qLYDFiWkA2k/s1600/BLOG_SETAS+E+BARRA+DE+ESPA%C3%87O.jpg)
+![Enter](/uploads/62ef7aeeba431936846e2a8a2eb8f0c6/enter_1.jpg)
 
 O jogo possui dois bônus que aparecem de vez em quando. Sendo um deles o bônus de vida, e o outro, um bônus de score. Pense bem em qual pegar, pois pegar os dois às vezes é díficil!
 
