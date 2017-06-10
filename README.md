@@ -5,6 +5,10 @@
 Repositório destinado à disciplina de OO - Orientação a Objetos da Faculdade
 do Gama (UnB) - 2017.1
 
+Aluno: Calebe Rios de Sousa Mendes
+
+Matrícula: 15/0120702
+
 ## Sobre
 
 Baseado no icônico jogo ```Space Invaders``` da época do Atari, ```Space and Aliens``` não possui nenhum fim lucrativo, existe somente para fins acadêmicos.
